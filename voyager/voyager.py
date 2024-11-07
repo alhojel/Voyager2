@@ -23,6 +23,7 @@ class Voyager:
         openai_api_key: str = None,
         env_wait_ticks: int = 20,
         env_request_timeout: int = 600,
+        pause_on_think: bool = True,
         max_iterations: int = 160,
         reset_placed_if_failed: bool = False,
         action_agent_model_name: str = "gpt-4",
@@ -106,6 +107,7 @@ class Voyager:
             azure_login=azure_login,
             server_port=server_port,
             request_timeout=env_request_timeout,
+            pause_on_think=pause_on_think,
         )
         self.env_wait_ticks = env_wait_ticks
         self.reset_placed_if_failed = reset_placed_if_failed

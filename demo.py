@@ -10,9 +10,10 @@ azure_login = {
 openai_api_key = ""
 
 voyager = Voyager(
-    mc_port="50057",
+    azure_login=azure_login,
     openai_api_key=openai_api_key,
-    resume = True,
+    ckpt_dir="ckpt2",
+    pause_on_think=False,
 )
 
 # start lifelong learning

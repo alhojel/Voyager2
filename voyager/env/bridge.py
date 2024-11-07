@@ -24,6 +24,7 @@ class VoyagerEnv(gym.Env):
         server_port=3000,
         request_timeout=600,
         log_path="./logs",
+        pause_on_think=True,
     ):
         if not mc_port and not azure_login:
             raise ValueError("Either mc_port or azure_login must be specified")
@@ -38,6 +39,8 @@ class VoyagerEnv(gym.Env):
         self.request_timeout = request_timeout
         self.log_path = log_path
         self.mineflayer = self.get_mineflayer_process(server_port)
+        self.pause_on_think = pause_on_think
+
         if azure_login:
             self.mc_instance = self.get_mc_instance()
         else:
@@ -156,7 +159,6 @@ class VoyagerEnv(gym.Env):
         returned_data = self.check_process()
         self.has_reset = True
         self.connected = True
-        # All the reset in step will be soft
         self.reset_options["reset"] = "soft"
         self.pause()
         return json.loads(returned_data)
@@ -173,6 +175,8 @@ class VoyagerEnv(gym.Env):
         return not self.connected
 
     def pause(self):
+        if not self.pause_on_think:
+            return False
         if self.mineflayer.is_running and not self.server_paused:
             res = requests.post(f"{self.server}/pause")
             if res.status_code == 200:
@@ -180,6 +184,8 @@ class VoyagerEnv(gym.Env):
         return self.server_paused
 
     def unpause(self):
+        if not self.pause_on_think:
+            return False
         if self.mineflayer.is_running and self.server_paused:
             res = requests.post(f"{self.server}/pause")
             if res.status_code == 200:
