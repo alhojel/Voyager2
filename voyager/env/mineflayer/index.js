@@ -28,9 +28,9 @@ app.post("/start", (req, res) => {
     bot = null;
     console.log(req.body);
     bot = mineflayer.createBot({
-        host: "localhost", // minecraft server ip
-        port: req.body.port, // minecraft server port
-        username: "bot",
+        host: "localhost",
+        port: req.body.port,
+        username: req.body.username || "bot",
         disableChatSigning: true,
         checkTimeoutInterval: 60 * 60 * 1000,
     });
@@ -107,11 +107,11 @@ app.post("/start", (req, res) => {
         bot.loadPlugin(pvp);
         //bot.loadPlugin(minecraftHawkEye);
 
-        // Add viewer initialization
+        // Add viewer initialization with dynamic port
         mineflayerViewer(bot, { 
-            port: 3007,          // Web viewer port
-            firstPerson: true,   // Enable first person view
-            viewDistance: 6      // View distance in chunks
+            port: req.body.viewerPort || 3007,  // Use dynamic viewer port
+            firstPerson: true,
+            viewDistance: 6
         })
 
         bot.collectBlock.movements.digCost = 0;

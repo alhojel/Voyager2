@@ -17,9 +17,12 @@ from .agents import SkillManager
 class Voyager:
     def __init__(
         self,
+        bot_id=0,
         mc_port: int = None,
         azure_login: Dict[str, str] = None,
         server_port: int = 3000,
+        viewer_port: int = 3001,  # Add default viewer port
+        username: str = None,      # Add default username
         openai_api_key: str = None,
         env_wait_ticks: int = 20,
         env_request_timeout: int = 600,
@@ -101,11 +104,27 @@ class Voyager:
         :param skill_library_dir: skill library dir
         :param resume: whether to resume from checkpoint
         """
-        # init env
+        self.bot_id = bot_id
+
+        # Calculate unique ports based on bot_id
+        server_port = 3000 + (bot_id * 2)          # Mineflayer port
+        viewer_port = 3001 + (bot_id * 2)          # Prismarine viewer port
+
+        # Assign unique username
+        username = username or f"bot_{bot_id}"
+
+        # Modify checkpoint dir to be unique per bot
+        ckpt_dir = os.path.join(ckpt_dir, f"bot_{bot_id}")
+        if not os.path.exists(ckpt_dir):
+            os.makedirs(ckpt_dir)
+
+        # Initialize environment with unique ports and username
         self.env = VoyagerEnv(
             mc_port=mc_port,
             azure_login=azure_login,
             server_port=server_port,
+            viewer_port=viewer_port,
+            username=username,
             request_timeout=env_request_timeout,
             pause_on_think=pause_on_think,
         )
@@ -163,6 +182,9 @@ class Voyager:
         self.messages = None
         self.conversations = []
         self.last_events = None
+
+        # Modify checkpoint dir to be unique per bot
+        ckpt_dir = os.path.join(ckpt_dir, f"bot_{bot_id}")
 
     def reset(self, task, context="", reset_env=True):
         self.action_agent_rollout_num_iter = 0

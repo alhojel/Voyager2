@@ -22,6 +22,8 @@ class VoyagerEnv(gym.Env):
         azure_login=None,
         server_host="http://127.0.0.1",
         server_port=3000,
+        viewer_port=None,
+        username=None,
         request_timeout=600,
         log_path="./logs",
         pause_on_think=True,
@@ -36,6 +38,8 @@ class VoyagerEnv(gym.Env):
         self.azure_login = azure_login
         self.server = f"{server_host}:{server_port}"
         self.server_port = server_port
+        self.viewer_port = viewer_port
+        self.username = username
         self.request_timeout = request_timeout
         self.log_path = log_path
         self.mineflayer = self.get_mineflayer_process(server_port)
@@ -93,15 +97,21 @@ class VoyagerEnv(gym.Env):
                 else:
                     continue
             print(self.mineflayer.ready_line)
+            payload = self.reset_options.copy()
+            if self.viewer_port is not None:
+                payload["viewerPort"] = self.viewer_port
+            if self.username is not None:
+                payload["username"] = self.username
+
             res = requests.post(
                 f"{self.server}/start",
-                json=self.reset_options,
+                json=payload,
                 timeout=self.request_timeout,
             )
             if res.status_code != 200:
                 self.mineflayer.stop()
                 raise RuntimeError(
-                    f"Minecraft server reply with code {res.status_code}"
+                    f"Minecraft server replied with code {res.status_code}"
                 )
             return res.json()
 
@@ -140,7 +150,7 @@ class VoyagerEnv(gym.Env):
             options = {}
 
         if options.get("inventory", {}) and options.get("mode", "hard") != "hard":
-            raise RuntimeError("inventory can only be set when options is hard")
+            raise RuntimeError("Inventory can only be set when options is hard")
 
         self.reset_options = {
             "port": self.mc_port,
@@ -150,6 +160,8 @@ class VoyagerEnv(gym.Env):
             "spread": options.get("spread", False),
             "waitTicks": options.get("wait_ticks", 5),
             "position": options.get("position", None),
+            "viewerPort": self.viewer_port,
+            "username": self.username,
         }
 
         self.unpause()
