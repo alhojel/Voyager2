@@ -25,61 +25,42 @@ azure_login = {
     "version": "fabric-loader-0.14.18-1.19", # the version Voyager is tested on
 }
 
-# voyager = Voyager(
-#     #mc_port="55612",
-#     azure_login=azure_login,
-#     openai_api_key=openai_api_key,
-#     ckpt_dir="/Users/daisysong/Desktop/Voyager2/checkpoints", # Feel free to use a new dir. Do not use the same dir as skill library because new events will still be recorded to ckpt_dir. 
-#     #resume = True,
-#     pause_on_think=False,
-# )
-
-# # start lifelong learning
-# try:
-#     voyager.learn(reset_env=False)
-# except KeyboardInterrupt:
-#     print("Program interrupted. Stopping mineflayer.")
-#     # Add any cleanup code here if necessary
-
-# Initialize the first bot
 bot_0 = Voyager(
     bot_id=0,  # Unique ID for the first bot
-    mc_port=54961,
+    mc_port=55377,
     #azure_login=azure_login,
     openai_api_key=openai_api_key,
     max_iterations=100,
     #ckpt_dir="./ckpt",
 )
 
-# Initialize the second bot
 bot_1 = Voyager(
     bot_id=1,  # Unique ID for the second bot
-    mc_port=54961,  # Ensure it connects to the same Minecraft server
+    mc_port=55377,  # Ensure it connects to the same Minecraft server
     #azure_login=azure_login,
     openai_api_key=openai_api_key,
     max_iterations=100,
     #ckpt_dir="./ckpt",
 )
 
-# Define what each bot thread should do
 def run_bot(voyager):
     try:
-        voyager.learn(reset_env=False)  # Run the bot's learning process
+        voyager.learn(reset_env=False)  
     except Exception as e:
         print(f"Error: {str(e)}")
-# Create thread objects - they don't start running yet
+
 bot1_thread = threading.Thread(target=run_bot, args=(bot_0,))
 bot2_thread = threading.Thread(target=run_bot, args=(bot_1,))
-
-# Start the threads - this actually starts the bots running
 bot1_thread.start()
-time.sleep(5)  # Wait before starting second bot
 bot2_thread.start()
-
-# Wait for both threads to complete
 bot1_thread.join()
 bot2_thread.join()
 
+# bot1_thread.connect()
+# bot2_thread.connect()
+# spawn_location = (100, 64, 100)  # Example coordinates
+# bot1_thread.move_to(spawn_location)
+# bot2_thread.move_to(spawn_location)
 
 """
 {
@@ -93,3 +74,45 @@ bot2_thread.join()
     "QWEN_API_KEY":""
 }
 """
+
+
+# Function to run a bot and capture vision
+# def run_bot(bot_id, mc_port, openai_api_key, output_dir):
+#     # Create a unique directory for the bot's vision data
+#     bot_output_dir = os.path.join(output_dir, f"bot_{bot_id}")
+#     os.makedirs(bot_output_dir, exist_ok=True)
+
+#     # Initialize the bot
+#     bot = Voyager(
+#         bot_id=bot_id,
+#         mc_port=mc_port,
+#         openai_api_key=openai_api_key,
+#         server_port=3000 + bot_id,  # Unique server port for each bot
+#         bot_username=f"bot_{bot_id}",  # Unique username for each bot
+#         resume=True,
+#     )
+
+# # Main function to run two bots concurrently
+# def run_two_bots():
+#     mc_port = 25565  # Minecraft server port
+#     openai_api_key = openai_api_key
+#     output_dir = "./bot_visions"
+
+#     # Create output directory
+#     os.makedirs(output_dir, exist_ok=True)
+
+#     # Run two bots in separate threads
+#     bot_1_thread = threading.Thread(target=run_bot, args=(0, mc_port, openai_api_key, output_dir))
+#     bot_2_thread = threading.Thread(target=run_bot, args=(1, mc_port, openai_api_key, output_dir))
+
+#     bot_1_thread.start()
+#     bot_2_thread.start()
+
+#     bot_1_thread.join()
+#     bot_2_thread.join()
+
+#     print("Both bots have completed their tasks.")
+
+# # Run the main function
+# if __name__ == "__main__":
+#     run_two_bots()

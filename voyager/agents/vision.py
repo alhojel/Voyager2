@@ -8,7 +8,6 @@ import requests
 import voyager.utils as U
 import requests
 import os
-import cv2
 import numpy as np
 from langchain.chat_models import ChatOpenAI
 from langchain.schema import HumanMessage
@@ -18,6 +17,8 @@ class VisionAgent:
         self,
         model_name="gpt-4-turbo-vision", 
         temperature=0, 
+        # qa_model_name="gpt-4",
+        # qa_temperature=0,
         request_timout=120,
         ckpt_dir="ckpt",
         resume=False,
@@ -39,17 +40,11 @@ class VisionAgent:
             temperature=temperature,
             request_timeout=request_timout,
         )
-
-        # # write a great prompt for the vision agent
-        # with open("/Users/daisysong/Desktop/CS194agent/Voyager_OAI/voyager/prompts/vision_template.txt", "r") as file:
-        #     self.prompt = file.read()
-   
-        # # Initialize the ChatGPT model
-        # self.llm = ChatOpenAI(
-        #     model_name=model_name,
-        #     temperature=temperature,
+        # TODO 2: add vision agent qa model name
+        # self.qa_llm = ChatOpenAI(
+        #     model_name=qa_model_name,
+        #     temperature=qa_temperature,
         #     request_timeout=request_timout,
-        #     prompt=self.prompt
         # )
 
     def update_vision_memory(self, vision_data):
@@ -92,6 +87,9 @@ class VisionAgent:
             ]
         }
         """
+        # write a great prompt for the vision agent
+        # with open("/Users/daisysong/Desktop/CS194agent/Voyager_OAI/voyager/prompts/vision_template.txt", "r") as file:
+        #     self.prompt = file.read()
 
         prompt = f"""
         You are a highly capable assistant designed to analyze vision data and assist in completing any specified Minecraft task.
@@ -114,8 +112,7 @@ class VisionAgent:
         # Prepare the messages with the prompt
         messages = [
             {"role": "system", "content": "You are a helpful assistant."},
-            {"role": "user", "content": prompt}
-        ]
+            {"role": "user", "content": prompt}]
 
         # Make the API call with the image
         try:
@@ -127,7 +124,6 @@ class VisionAgent:
             )
         except Exception as e:
             raise RuntimeError(f"API call failed: {e}")
-
         return response
 
 # Example usage
@@ -143,41 +139,7 @@ if __name__ == "__main__":
 
 
 
-# import requests
-# import voyager.utils as U
-# from langchain.chat_models import ChatOpenAI
-# from langchain.schema import HumanMessage
-# import numpy as np
-# import cv2  # OpenCV for image processing
 
-# class VisionAgent:
-#     def __init__(self, model_name="gpt-4", temperature=0, request_timeout=120):
-#         self.model_name = model_name
-#         self.temperature = temperature
-#         self.request_timeout = request_timeout
-        
-#         # Initialize the ChatGPT model
-#         self.llm = ChatOpenAI(
-#             model_name=self.model_name,
-#             temperature=self.temperature,
-#             request_timeout=self.request_timeout,
-#         )
-
-#     def analyze_image(self, image_path):
-#         """Send the image to ChatGPT for analysis."""
-#         with open(image_path, "rb") as image_file:
-#             image_data = image_file.read()
-        
-#         # Prepare the prompt for ChatGPT
-#         prompt = "Analyze the following image and provide insights: [IMAGE]"
-        
-#         # Send the image data to the ChatGPT API
-#         response = self.llm.generate(
-#             messages=[HumanMessage(content=prompt)],
-#             files={"image": image_data}
-#         )
-        
-#         return response.content
 
 #     def estimate_depth(self, image_path):
 #         """Estimate depth from the image using OpenCV or a depth estimation model."""
@@ -229,11 +191,7 @@ if __name__ == "__main__":
 #         observation = f"Insights from the image analysis:\n{combined_insights}\n"
 #         return HumanMessage(content=observation)
 
-# # Example usage
-# if __name__ == "__main__":
-#     vision_agent = VisionAgent()
-#     insights = vision_agent.render_human_message("/path/to/your/image.jpg")
-#     print("Vision Agent Insights:", insights.content)
+
 
 # class VisionAgent:
 #     def __init__(self, object_detector, depth_estimator=None, multimodal_model=None):
@@ -272,39 +230,10 @@ if __name__ == "__main__":
 #         if self.multimodal_model:
 #             return self.multimodal_model.ask_spatial_question(image_path, question)
 
+# Role: Processes visual data and provides insights or information based on visual inputs.
+# Actions:
+# Receive visual data (e.g., images, video feeds) from the environment.
+# Analyze the visual data to identify objects, scenes, or relevant features.
+# Provide the Action Agent with the necessary visual information to inform decision-making.
 
-# class VisionAgent:
-#     def __init__(self, vision_api_type="openai", openai_api_key=None, anthropic_api_key=None):
-#         self.vision_api_type = vision_api_type
-#         self.openai_api_key = openai_api_key
-#         self.anthropic_api_key = anthropic_api_key
 
-#     def analyze_image(self, image_path):
-#         """Analyze an image using the specified vision API and return its content description."""
-#         if self.vision_api_type == "openai":
-#             openai.api_key = self.openai_api_key
-#             with open(image_path, "rb") as image_file:
-#                 response = openai.ChatCompletion.create(
-#                     model="gpt-4-vision",
-#                     messages=[
-#                         {"role": "system", "content": "Analyze the image and describe the content."}
-#                     ],
-#                     files={"image": image_file}
-#                 )
-#                 return response['choices'][0]['message']['content']
-
-#         elif self.vision_api_type == "anthropic":
-#             client = anthropic.Client(api_key=self.anthropic_api_key)
-#             with open(image_path, "rb") as image_file:
-#                 response = client.completions.create(
-#                     model="claude-3.5-sonnet",
-#                     prompt="Describe this image content.",
-#                     files={"image": image_file}
-#                 )
-#                 return response['completion']
-
-#     def capture_and_analyze(self, image_path):
-#         """Capture and analyze an image, returning visual data for other agents."""
-#         visual_data = self.analyze_image(image_path)
-#         print("Vision Analysis:", visual_data)
-#         return visual_data

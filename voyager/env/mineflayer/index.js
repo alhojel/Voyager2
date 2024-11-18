@@ -509,7 +509,7 @@ async function setupVisionCapture(bot) {
             console.log("Attempting to capture and save screenshot...");
             // Take screenshot and save to logging folder with compression
             const timestamp = new Date().toISOString().replace(/[:.]/g, '-'); // Make filename compatible
-            const screenshotFilename = `screenshot-${timestamp}.jpg`;
+            const screenshotFilename = `${bot.bot_Id}-screenshot-${timestamp}.jpg`;
             const screenshotPath = path.join(loggingFolder, screenshotFilename);
 
             await page.screenshot({
@@ -529,6 +529,8 @@ async function setupVisionCapture(bot) {
 
             // Collect metadata
             const metadata = {
+                bot_id: bot.bot_id,
+                mc_port: bot.mc_port,
                 timestamp: new Date().toISOString(),
                 position: bot.entity.position,
                 orientation: bot.entity.yaw,
@@ -544,7 +546,7 @@ async function setupVisionCapture(bot) {
             };
 
             // Save metadata asynchronously
-            const metadataFilename = `metadata-${timestamp}.json`;
+            const metadataFilename = `${bot.bot_Id}-metadata-${timestamp}.json`;
             const metadataPath = path.join(loggingFolder, metadataFilename);
 
             fs.writeFile(metadataPath, JSON.stringify(metadata, null, 2), (err) => {
@@ -601,106 +603,6 @@ async function setupVisionCapture(bot) {
 }
 
 //module.exports = setupVisionCapture;
-
-
-// async function setupVisionCapture(bot) {
-//     console.log('Starting vision capture setup');
-//     const browser = await puppeteer.launch();
-//     const page = await browser.newPage();
-//     await page.setViewport({ width: 640, height: 480 });
-//     await page.goto('http://localhost:3007'); // Connect to the viewer
-
-//     // Wait for the viewer to load
-//     await page.waitForTimeout(2000);
-
-//     let lastCaptureTime = Date.now();
-//     const captureInterval = 1000 / 16; // Approximately 62.5 ms for 16 fps
-
-//     // Ensure the logging folder exists
-//     const loggingFolder = path.resolve('/Users/daisysong/Desktop/CS194agent/Voyager_OAI/logs');
-//     if (!fs.existsSync(loggingFolder)) {
-//         fs.mkdirSync(loggingFolder);
-//     }
-
-//     // Maximum number of frames to keep
-//     const maxFrames = 1000; // Adjust this number based on your storage capacity
-//     const frameFiles = []; // Keep track of saved frame file names
-
-//     async function captureAndSave() {
-//         try {
-//             // Take screenshot and save to logging folder with compression
-//             const timestamp = new Date().toISOString().replace(/[:.]/g, '-'); // Make filename compatible
-//             const screenshotFilename = `screenshot-${timestamp}.jpg`;
-//             const screenshotPath = path.join(loggingFolder, screenshotFilename);
-
-//             await page.screenshot({
-//                 path: screenshotPath,
-//                 type: 'jpeg',
-//                 quality: 50, // Adjust quality between 0-100
-//             });
-
-//             // Collect metadata
-//             const metadata = {
-//                 timestamp: new Date().toISOString(),
-//                 position: bot.entity.position,
-//                 orientation: bot.entity.yaw,
-//                 inventory: bot.inventory.items().map((item) => ({
-//                     name: item.name,
-//                     count: item.count,
-//                 })),
-//             };
-
-//             // Save metadata asynchronously
-//             const metadataFilename = `metadata-${timestamp}.json`;
-//             const metadataPath = path.join(loggingFolder, metadataFilename);
-
-//             fs.writeFile(metadataPath, JSON.stringify(metadata, null, 2), (err) => {
-//                 if (err) {
-//                     console.error('Error saving metadata:', err);
-//                 }
-//             });
-
-//             // Keep track of saved frames
-//             frameFiles.push({ screenshot: screenshotPath, metadata: metadataPath });
-
-//             // Manage disk space by deleting old frames
-//             if (frameFiles.length > maxFrames) {
-//                 const oldFrame = frameFiles.shift();
-//                 fs.unlink(oldFrame.screenshot, (err) => {
-//                     if (err) {
-//                         console.error('Error deleting old screenshot:', err);
-//                     }
-//                 });
-//                 fs.unlink(oldFrame.metadata, (err) => {
-//                     if (err) {
-//                         console.error('Error deleting old metadata:', err);
-//                     }
-//                 });
-//             }
-
-//             // Optional: Log progress
-//             // console.log(`Screenshot and metadata saved: ${screenshotPath}`);
-
-//         } catch (error) {
-//             console.error('Error capturing and saving screenshot:', error);
-//         }
-//     }
-
-//     // Set up periodic capture at approximately 16 fps
-//     const captureLoop = setInterval(captureAndSave, captureInterval);
-
-//     // Clean up function
-//     const cleanup = async () => {
-//         clearInterval(captureLoop);
-//         await browser.close();
-//     };
-
-//     // Add cleanup to bot's end event
-//     bot.once('end', cleanup);
-//     return cleanup; // Return cleanup function in case you need to stop early
-// }
-
-// module.exports = setupVisionCapture;
 
 
 // Sets up an Express server with endpoints to start, stop, and control a Minecraft bot using Mineflayer.
