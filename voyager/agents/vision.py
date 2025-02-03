@@ -1,45 +1,4 @@
-# TODO 3: Enhance Long-Term Memory and Knowledge Sharing
-    # Current Challenge: Lack of memory limits agents’ ability to learn from past experiences.
-    # Solution:
-    # Add a multi-modal memory system to store successful strategies and environmental data (e.g., locations, paths, patterns).
-    # Use retrieval-augmented generation (RAG) techniques to reference this memory during task execution.
-    # Potential Breakthrough: Allows agents to reuse strategies and adapt to repetitive or complex tasks faster.
 
-
-    # Use Large Language Models (LLMs) with Structured Fine-Tuning
-    # Current Challenge: Limited reasoning capabilities in generating action plans.
-    # Solution:
-    # Fine-tune LLMs like GPT-4 to generate context-aware, multi-agent action plans.
-    # Add specialized modules (e.g., planner, describer, critic) for interpreting visual cues and generating collaborative instructions.
-    # Potential Breakthrough: Enhances planning and reasoning capabilities, making agents capable of solving unseen tasks effectively.
-
-    # Introduce Proactive Error Handling and Adaptation
-    # Current Challenge: Agents often fail when unexpected errors or environmental changes occur.
-    # Solution:
-    # Implement closed-loop feedback mechanisms to detect and correct errors autonomously.
-    # Add a simulation layer for agents to test potential actions before execution.
-    # Potential Breakthrough: Reduces task failure rates and increases the robustness of the system in unpredictable environments.
-
-    # Optimize Vision Models for Navigation Tasks
-    # Current Challenge: Vision models may lack the fine-tuned ability to detect and interact with Minecraft-specific objects.
-    # Solution:
-    # Train or fine-tune a vision transformer (e.g., Swin, CLIP) on Minecraft datasets.
-    # Implement spatial reasoning modules to compute relative positions (x, y, z) and accessibility.
-    # Potential Breakthrough: Enhances object detection and spatial reasoning, making agents more efficient in navigation.
-
-    # Simulate Scalable Experiments
-    # Current Challenge: Limited testing scenarios may not reveal the true potential or weaknesses of the system.
-    # Solution:
-    # Use procedurally generated Minecraft environments with varying levels of complexity.
-    # Simulate large-scale collaboration tasks with 10+ agents to test scalability and adaptability.
-    # Potential Breakthrough: Demonstrates real-world viability and provides insights for further optimization.
-
-    # Publish and Benchmark Against State-of-the-Art
-    # Current Challenge: It's unclear how your system compares to existing frameworks like HAS, Voyager, and STEVE.
-    # Solution:
-    # Conduct benchmarks on open-ended navigation tasks (e.g., map exploration, multi-modal goal search) using your enhanced system.
-    # Publish results comparing your system's efficiency, success rates, and scalability.
-    # Potential Breakthrough: Establishes credibility in the research community and identifies areas for improvement.
     #    python -m voyager.agents.vision
 import logging
 import openai
@@ -463,3 +422,46 @@ class VisionAgent:
 # Simulate Scalable Experiments to stress-test the system.
 # Benchmark and Publish Results to validate your advancements.
 # By implementing these steps, you can push the boundaries of multi-agent navigation systems and potentially achieve breakthroughs in embodied AI.
+
+# TODO 3: Enhance Long-Term Memory and Knowledge Sharing
+    # Current Challenge: Lack of memory limits agents’ ability to learn from past experiences.
+    # Solution:
+    # Add a multi-modal memory system to store successful strategies and environmental data (e.g., locations, paths, patterns).
+    # Use retrieval-augmented generation (RAG) techniques to reference this memory during task execution.
+    # Potential Breakthrough: Allows agents to reuse strategies and adapt to repetitive or complex tasks faster.
+
+
+    # Use Large Language Models (LLMs) with Structured Fine-Tuning
+    # Current Challenge: Limited reasoning capabilities in generating action plans.
+    # Solution:
+    # Fine-tune LLMs like GPT-4 to generate context-aware, multi-agent action plans.
+    # Add specialized modules (e.g., planner, describer, critic) for interpreting visual cues and generating collaborative instructions.
+    # Potential Breakthrough: Enhances planning and reasoning capabilities, making agents capable of solving unseen tasks effectively.
+
+    # Introduce Proactive Error Handling and Adaptation
+    # Current Challenge: Agents often fail when unexpected errors or environmental changes occur.
+    # Solution:
+    # Implement closed-loop feedback mechanisms to detect and correct errors autonomously.
+    # Add a simulation layer for agents to test potential actions before execution.
+    # Potential Breakthrough: Reduces task failure rates and increases the robustness of the system in unpredictable environments.
+
+    # Optimize Vision Models for Navigation Tasks
+    # Current Challenge: Vision models may lack the fine-tuned ability to detect and interact with Minecraft-specific objects.
+    # Solution:
+    # Train or fine-tune a vision transformer (e.g., Swin, CLIP) on Minecraft datasets.
+    # Implement spatial reasoning modules to compute relative positions (x, y, z) and accessibility.
+    # Potential Breakthrough: Enhances object detection and spatial reasoning, making agents more efficient in navigation.
+
+    # Simulate Scalable Experiments
+    # Current Challenge: Limited testing scenarios may not reveal the true potential or weaknesses of the system.
+    # Solution:
+    # Use procedurally generated Minecraft environments with varying levels of complexity.
+    # Simulate large-scale collaboration tasks with 10+ agents to test scalability and adaptability.
+    # Potential Breakthrough: Demonstrates real-world viability and provides insights for further optimization.
+
+    # Publish and Benchmark Against State-of-the-Art
+    # Current Challenge: It's unclear how your system compares to existing frameworks like HAS, Voyager, and STEVE.
+    # Solution:
+    # Conduct benchmarks on open-ended navigation tasks (e.g., map exploration, multi-modal goal search) using your enhanced system.
+    # Publish results comparing your system's efficiency, success rates, and scalability.
+    # Potential Breakthrough: Establishes credibility in the research community and identifies areas for improvement.
